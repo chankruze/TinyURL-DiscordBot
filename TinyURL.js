@@ -5,7 +5,7 @@ Created: Tue Aug 18 2020 12:01:13 GMT+0530 (India Standard Time)
 Copyright (c) Geekofia 2020 and beyond
 */
 
-if (!process.BOT_TOKEN) {
+if (!process.env.BOT_TOKEN) {
 	require('dotenv').config({ path: __dirname + '/.env' });
 }
 
