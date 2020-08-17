@@ -63,10 +63,11 @@ client.on('message', async message => {
 		let cmdFile = require(`./${command.toLowerCase()}.js`)
 		cmdFile.run(client, prefix, message, args);
 	} catch (err) {
+		console.error(err);
 		console.log(`cmdFile, ${command.toLowerCase()}.js does not exist`);
 	}
 
-})
+});
 
 client.on('guildCreate', guild => {
 	guild.owner.send(`TinyURL has been added to your guild \`${guild.name}\`, if you'd like to see the features and commands for this bot please use the link provided below and also consider giving the bot an upvote...\nhttps://top.gg/bot/744989604997759016`);
