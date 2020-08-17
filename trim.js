@@ -8,7 +8,7 @@ Copyright (c) Geekofia 2020 and beyond
 const isgd = require('./shorten');
 
 // Trim Command
-module.exports.run = (client, prefix, message, args, con, dbl) => {
+module.exports.run = (client, prefix, message, args) => {
 
 	const clientMember = message.guild.member(client.user);
 

@@ -5,18 +5,18 @@ Created: Tue Aug 18 2020 12:01:13 GMT+0530 (India Standard Time)
 Copyright (c) Geekofia 2020 and beyond
 */
 
+if (!process.BOT_TOKEN) {
+	require('dotenv').config({ path: __dirname + '/.env' });
+}
+
 const discord = require('discord.js');
-const DBL = require('dblapi.js');
-const mysql = require('mysql');
+// const DBL = require('dblapi.js');
 
+const prefix = "!";
 const client = new discord.Client({ disableEveryone: true });
-const dbl = new DBL(process.env.DBL_TOKEN);
+// const dbl = new DBL(process.env.DBL_TOKEN);
 
-var auth = require('./auth.json');
-
-const prefix = auth.prefix;
-
-//ready event
+// ready event
 client.on('ready', () => {
 	// Set the client user's status
 	// client.user.setStatus('idle')
@@ -31,25 +31,9 @@ client.on('ready', () => {
 	console.log(`Logged in as ${client.user.username}!`);
 	console.log(`Connected to ${client.guilds.size} servers`);
 
-	client.setInterval(() => {
-		dbl.postStats(client.guilds.size);
-	}, 1800 * 1000);
-});
-
-let con = mysql.createConnection({
-	host: process.env.SQL_HOST,
-	user: process.env.SQL_USER,
-	password: process.env.SQL_PASS,
-	database: process.env.SQL_DATABASE,
-	port: process.env.SQL_PORT
-});
-
-con.connect(err => {
-	if (err) {
-		console.log(err.stack);
-	} else {
-		console.log(`Connected to database`);
-	}
+	// client.setInterval(() => {
+	// 	dbl.postStats(client.guilds.size);
+	// }, 1800 * 1000);
 });
 
 client.on('message', async message => {
@@ -77,7 +61,7 @@ client.on('message', async message => {
 
 	try {
 		let cmdFile = require(`./${command.toLowerCase()}.js`)
-		cmdFile.run(client, prefix, message, args, con, dbl);
+		cmdFile.run(client, prefix, message, args);
 	} catch (err) {
 		console.log(`cmdFile, ${command.toLowerCase()}.js does not exist`);
 	}
@@ -94,4 +78,5 @@ client.on('guildDelete', guild => {
 	console.log(`TinyURL removed from, Name:${guild.name} | ID:${guild.id}`);
 })
 
-client.login(auth.token)
+
+client.login(process.env.BOT_TOKEN)
