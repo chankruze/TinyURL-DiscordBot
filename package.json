@@ -1,0 +1,35 @@
+{
+  "name": "TinyURL",
+  "version": "1.0.0",
+  "description": "Shortens long nasty valid URLs",
+  "main": "TinyURL.js",
+  "scripts": {
+    "start": "node TinyURL.js",
+    "dev": "nodemon TinyURL.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chankruze/TinyURL-DiscordBot.git"
+  },
+  "keywords": [
+    "TinyURL",
+    "url-shortener",
+    "discord",
+    "bot",
+    "node-js"
+  ],
+  "author": "chankruze (chankruze@geekofia.in)",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/chankruze/TinyURL-DiscordBot/issues"
+  },
+  "homepage": "https://github.com/chankruze/TinyURL-DiscordBot#readme",
+  "dependencies": {
+    "dblapi.js": "^1.1.0",
+    "discord.js": "^11.3.0",
+    "mysql": "^2.15.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
