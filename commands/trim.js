@@ -5,7 +5,7 @@ Created: Tue Aug 18 2020 12:12:45 GMT+0530 (India Standard Time)
 Copyright (c) Geekofia 2020 and beyond
 */
 
-const isgd = require('./shorten');
+const isgd = require('../utils/shorten');
 
 function shortenURL(prefix, message, args) {
 	if (args.length > 0) {
