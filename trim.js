@@ -7,12 +7,17 @@ Copyright (c) Geekofia 2020 and beyond
 
 const isgd = require('./shorten');
 
-function shortenURL(message, args) {
+function shortenURL(prefix, message, args) {
 	if (args.length > 0) {
 		switch (args[0]) {
 			case 'help':
+				// show usage in dm
 				message.author
 					.send(`TinyURL Usage: *\`${prefix}trim <long url>\`* | \`<required>\``)
+					.catch(err => console.log(err.stack));
+					
+				// show usage in channel 
+				message.channel.send(`TinyURL Usage: *\`${prefix}trim <long url>\`* | \`<required>\``)
 					.catch(err => console.log(err.stack));
 				break;
 
@@ -32,7 +37,7 @@ function shortenURL(message, args) {
 module.exports.run = (client, prefix, message, args) => {
 
 	if (message.channel.type === 'dm') {
-		shortenURL(message, args);
+		shortenURL(prefix, message, args);
 		return;
 	} else {
 		const clientMember = message.guild.member(client.user);
@@ -43,7 +48,7 @@ module.exports.run = (client, prefix, message, args) => {
 			return;
 		}
 
-		shortenURL(message, args);
+		shortenURL(prefix, message, args);
 		message.delete(0).catch(err => console.log(err.stack));
 	}
 }

@@ -64,7 +64,7 @@ client.on('message', async message => {
 		cmdFile.run(client, prefix, message, args);
 	} catch (err) {
 		console.error(err);
-		console.log(`cmdFile, ${command.toLowerCase()}.js does not exist`);
+		// console.log(`cmdFile, ${command.toLowerCase()}.js does not exist`);
 	}
 
 });
