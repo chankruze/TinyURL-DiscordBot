@@ -12,7 +12,7 @@ if (!process.env.BOT_TOKEN) {
 const discord = require('discord.js');
 // const DBL = require('dblapi.js');
 
-const prefix = "!";
+const prefix = "--";
 const client = new discord.Client({ disableEveryone: true });
 // const dbl = new DBL(process.env.DBL_TOKEN);
 
@@ -24,7 +24,7 @@ client.on('ready', () => {
 	// 	.catch(console.error);
 
 	// Set the client user's activity
-	client.user.setActivity('!trim', { type: 'LISTENING' })
+	client.user.setActivity(`${prefix}help`, { type: 'LISTENING' })
 		.then(presence => console.log(`Activity set to ${presence.activities[0].name}`))
 		.catch(console.error);
 
@@ -59,22 +59,24 @@ client.on('message', async message => {
 	const args = message.content.split(/\s+/g);
 	const command = args.shift().slice(prefix.length);
 
+	// add advance logic for commands here
+
 	try {
 		let cmdFile = require(`./commands/${command.toLowerCase()}.js`)
 		cmdFile.run(client, prefix, message, args);
 	} catch (err) {
 		console.error(err);
-		// console.log(`cmdFile, ${command.toLowerCase()}.js does not exist`);
 	}
 
 });
 
+// Client add Guild Event
 client.on('guildCreate', guild => {
 	guild.owner.send(`TinyURL has been added to your guild \`${guild.name}\`, if you'd like to see the features and commands for this bot please use the link provided below and also consider giving the bot an upvote...\nhttps://top.gg/bot/744989604997759016`);
 	console.log(`TinyURL was added to, Name:${guild.name} | ID:${guild.id} | Members:${guild.memberCount}`);
 })
 
-//Client leave Guild Event
+// Client leave Guild Event
 client.on('guildDelete', guild => {
 	console.log(`TinyURL removed from, Name:${guild.name} | ID:${guild.id}`);
 })
