@@ -5,27 +5,45 @@ Created: Thu Aug 20 2020 14:00:26 GMT+0530 (India Standard Time)
 Copyright (c) Geekofia 2020 and beyond
 */
 
-const Discord = require('discord.js');
+const Discord = require('discord.js')
+
+const config = require('config');
+const prefix = config.get('prefix');
 
 // Help Command
-module.exports.run = (client, prefix, message, args) => {
+module.exports.run = (client, message, args) => {
     // inside a command, event listener, etc.
-    const exampleEmbed = new Discord.MessageEmbed()
-        .setColor('#007bff')
+    const helpEmbed = new Discord.MessageEmbed()
+        .setColor(config.get('bg-tiny-url'))
         .setTitle('TinyURL-Help')
         .setDescription('TinyURL is the easiest way to shorten long URLs in your Discord server as well as DM. It supports all direct urls!\n\n**Note**: It don\'t shorten already shortened URLs (by other services).')
-        .setURL('https://geekofia.in/TinyURL-DiscordBot')
+        .setThumbnail(config.get('url-logo'))
+        .setURL(config.get("url-home"))
         .addField('\u200b', '\u200b')
-        .addField('⌨️ Commands', `→ To see all available commands, use \`${prefix}commands\`.` , false)
-        .addField('💰 Donations', '→ UPI: `chankruze@oksbi` | [scan QR code](https://res.cloudinary.com/chankruze/image/upload/v1597921018/Discord/IMG_20200820_162354.jpg)', false)
+        .addField(`${config.get("emoji-keyboard")} Commands`, `${config.get("ascii-arrow-right")} To see all available commands, use \`${prefix}commands\`.`, false)
+        .addField(`${config.get("emoji-money")} Donations`, `${config.get("ascii-arrow-right")} UPI: \`chankruze@oksbi\` | [scan QR code](${config.get("url-gpay-qr")})`, false)
         .addField('\u200b', '\u200b')
         .addFields(
-            { name: '🔗 Add to Discord', value: '[📌 Invite TinyURL](https://discord.com/api/oauth2/authorize?client_id=744989604997759016&permissions=26624&scope=bot)', inline: true },
-            { name: '💬 Support Server', value: '[📌 Join Geekofia](http://discord.gg/uNKRMua)', inline: true },
-            { name: '📱 Install TinyURL App', value: '[📌 Get it on Playstore](https://play.google.com/store/apps/details?id=com.geekofia.tinyurl)', inline: true },
+            { name: `${config.get("emoji-link")} Add to Discord`, value: `[${config.get("emoji-pin")} Invite TinyURL](${config.get("url-invite")})`, inline: true },
+            { name: `${config.get("emoji-chat")} Support Server`, value: `[${config.get("emoji-pin")} Join Geekofia](${config.get("url-invite")})`, inline: true },
+            { name: `${config.get("emoji-mobile")} Install TinyURL App`, value: `[${config.get("emoji-pin")} Get it on Playstore](${config.get("url-playstore")})`, inline: true },
         )
         .setTimestamp()
-        .setFooter('Developed with ❤️ by chankruze', 'https://avatars1.githubusercontent.com/u/41100705');
+        .setFooter(`Developed with ${config.get("emoji-heart")}  by chankruze`, config.get("url-avatar-git-geekofia"))
 
-    message.channel.send(exampleEmbed)
+    // check if DM
+    if (message.channel.type === 'dm') {
+        message.channel.send(helpEmbed)
+    } else {
+        const clientMember = message.guild.member(client.user)
+
+        if (!message.channel.permissionsFor(clientMember).has('EMBED_LINKS')
+            || !message.channel.permissionsFor(clientMember).has('SEND_MESSAGES')) {
+            message.author.send(`I do not have permission to send messages in \`#${message.channel.name}\`...\nIf you believe this is incorrect then please ensure the channels permissions allow TinyURL to \`SEND_MESSAGES & EMBED_LINKS\`.`)
+                .then(msg => msg.delete(10 * 1000)).catch(err => console.log(err.stack))
+            return;
+        } else {
+            message.channel.send(helpEmbed)
+        }
+    }
 }

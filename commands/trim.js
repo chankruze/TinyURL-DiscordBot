@@ -5,9 +5,12 @@ Created: Tue Aug 18 2020 12:12:45 GMT+0530 (India Standard Time)
 Copyright (c) Geekofia 2020 and beyond
 */
 
-const isgd = require('../utils/shorten');
+const isgd = require('utils/shorten');
 
-function shortenURL(prefix, message, args) {
+const config = require('config');
+const prefix = config.get('prefix');
+
+function shortenURL(message, args) {
 	if (args.length > 0) {
 		switch (args[0]) {
 			case 'help':
@@ -15,7 +18,7 @@ function shortenURL(prefix, message, args) {
 				message.author
 					.send(`TinyURL Usage: *\`${prefix}trim <long url>\`* | \`<required>\``)
 					.catch(err => console.log(err.stack));
-					
+
 				// show usage in channel 
 				message.channel.send(`TinyURL Usage: *\`${prefix}trim <long url>\`* | \`<required>\``)
 					.catch(err => console.log(err.stack));
@@ -34,10 +37,10 @@ function shortenURL(prefix, message, args) {
 }
 
 // Trim Command
-module.exports.run = (client, prefix, message, args) => {
+module.exports.run = (client, message, args) => {
 
 	if (message.channel.type === 'dm') {
-		shortenURL(prefix, message, args);
+		shortenURL(message, args);
 		return;
 	} else {
 		const clientMember = message.guild.member(client.user);
@@ -48,7 +51,7 @@ module.exports.run = (client, prefix, message, args) => {
 			return;
 		}
 
-		shortenURL(prefix, message, args);
+		shortenURL(message, args);
 		message.delete(0).catch(err => console.log(err.stack));
 	}
 }

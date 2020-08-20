@@ -4,39 +4,60 @@ Created: Thu Aug 20 2020 18:15:38 GMT+0530 (India Standard Time)
 
 Copyright (c) Geekofia 2020 and beyond
 */
-const glob = require('glob')
+const glob = require('glob');
 const Discord = require('discord.js');
 
-function listCommands(path, prefix) {
-    var glob = require('glob')
-    var obj = {}
-    var command
+const config = require('config');
+const prefix = config.get('prefix');
 
-    glob.sync('*.js', { cwd: path, ignore: 'commands.js' }).forEach(function (option) {
-        command = option.replace(/\.js$/, '')
-        obj[`${prefix}${command}`] = command
-    })
+let commands = {
+    [prefix + 'help']: 'To see all information about TinyURL',
+    [prefix + 'invite']: 'To generate an invite link for your',
+    [prefix + 'commands']: 'To see list all commands',
+    [prefix + 'trim']: 'To shorten a long URL',
+};
 
-    return obj
-}
+// function listCommands(path, prefix) {
+//     var glob = require('glob')
+//     var obj = {}
+//     var command
 
-module.exports.run = (client, prefix, message, args) => {
-    let obj = listCommands("./commands/", prefix)
+//     glob.sync('*.js', { cwd: path, ignore: 'commands.js' }).forEach(function (option) {
+//         command = option.replace(/\.js$/, '')
+//         obj[`${prefix}${command}`] = command
+//     })
 
-    let commandEmbed = new Discord.MessageEmbed()
-        .setColor('#007bff')
+//     return obj
+// }
+
+module.exports.run = (client, message, args) => {
+    let commandsEmbed = new Discord.MessageEmbed()
+        .setColor(config.get('bg-warning'))
         .setTitle('TinyURL-Commands')
-        .setURL('https://geekofia.in/TinyURL-DiscordBot')
+        .setURL(config.get("url-home"))
         .setDescription("All available commands are listed below. **Note:** Commands are NOT case sensitive")
+        .setThumbnail(config.get('url-logo'))
 
-
-    for (elem in obj) {
-        commandEmbed.addField(`\`${elem}\``, obj[elem])
+    for (elem in commands) {
+        commandsEmbed.addField(`${config.get("emoji-keyboard")}  ${elem}`, `${config.get("ascii-arrow-right")}  ${commands[elem]}`)
     }
 
-    commandEmbed.addField('\u200b', '\u200b')
-        .setTimestamp()
-        .setFooter('Developed with ❤️ by chankruze', 'https://avatars1.githubusercontent.com/u/41100705');
+    commandsEmbed.setTimestamp()
+        .setFooter(`Developed with ${config.get("emoji-heart")}  by chankruze`, config.get("url-avatar-git-geekofia"))
 
-    message.channel.send(commandEmbed)
+    // check if DM
+    if (message.channel.type === 'dm') {
+        message.channel.send(commandsEmbed)
+    } else {
+        const clientMember = message.guild.member(client.user);
+
+        if (!message.channel.permissionsFor(clientMember).has('EMBED_LINKS')
+            || !message.channel.permissionsFor(clientMember).has('SEND_MESSAGES')) {
+            message.author.send(`I do not have permission to send messages in \`#${message.channel.name}\`...\nIf you believe this is incorrect then please ensure the channels permissions allow TinyURL to \`SEND_MESSAGES & EMBED_LINKS\`.`)
+                .then(msg => msg.delete(10 * 1000)).catch(err => console.log(err.stack));
+            return;
+        } else {
+            message.channel.send(commandsEmbed)
+        }
+    }
 }

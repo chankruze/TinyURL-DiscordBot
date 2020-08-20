@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/chankruze/TinyURL-DiscordBot#readme",
   "dependencies": {
+    "config": "^3.3.1",
     "discord.js": "^12.3.1",
     "glob": "^7.1.6"
   },
