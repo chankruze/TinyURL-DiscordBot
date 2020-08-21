@@ -6,7 +6,6 @@ Copyright (c) Geekofia 2020 and beyond
 */
 
 const axios = require('axios');
-const _PIXEL = 100;
 
 const shorten = (data, callback) => {
     if (data) {
@@ -40,8 +39,8 @@ const shorten = (data, callback) => {
                 // success responsse to send to callback
                 let res = {
                     shorturl: null,
+                    statsurl: null,
                     qrurl: null,
-                    statsurl: null, 
                 };
 
                 if (data.shorturl) {
@@ -53,7 +52,7 @@ const shorten = (data, callback) => {
                     }
 
                     if (generateQr) {
-                        res.qrurl =  `https://api.qrserver.com/v1/create-qr-code/?data=${res.shorturl}`;
+                        res.qrurl = `https://api.qrserver.com/v1/create-qr-code/?data=${res.shorturl}`;
                     }
 
                     // finally call callback
