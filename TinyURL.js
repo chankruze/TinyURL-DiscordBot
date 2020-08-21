@@ -53,9 +53,10 @@ client.on('message', async message => {
 		return;
 	}
 
+	// --trim -s yes -c hello -q yes -u test.com
+	
 	const args = message.content.split(/\s+/g);
 	const command = args.shift().slice(prefix.length);
-
 	try {
 		let cmdFile = require(`./commands/${command.toLowerCase()}.js`);
 		cmdFile.run(client, message, args);

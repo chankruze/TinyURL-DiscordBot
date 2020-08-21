@@ -14,25 +14,53 @@ function shortenURL(message, args) {
 	let arguments = {
 		"-s": false,
 		"-c": null,
-		"-q": true,
+		"-q": false,
 		"-u": null
 	};
 
 	// check arguments length (if flags present grab flags and theirvalue)
 	if (args.length > 1) {
 		for (let index = 0; index < args.length; index += 2) {
-			const elem = args[index];
+			const elem = args[index].toLowerCase();
 
 			switch (elem) {
 				case "-s":
+					if (args[index + 1] == "yes") {
+						arguments[elem] = true;
+					}
 				case "-c":
+					arguments[elem] = args[index + 1]
 				case "-q":
+					if (args[index + 1] == "yes") {
+						arguments[elem] = true;
+					}
 				case "-u":
 					arguments[elem] = args[index + 1];
 					break;
 				default:
 					break;
 			}
+		}
+
+		//**Note:** Commands are NOT case sensitive
+		if (!arguments["-u"]) {
+			const Discord = require('discord.js');
+			let errorEmbed = new Discord.MessageEmbed()
+				.setColor(config.get('bg-danger'))
+				// .setTitle('TinyURL-Error')
+				// .setURL(config.get("url-home"))
+				.setDescription(`${config.get("emoji-cross")} No URL provided with \`-u\` flag`)
+				.addFields(
+					{ name: `${config.get("emoji-info")} Usage`, value: `\`${prefix}trim -s <yes/no> -q <yes/no> -c <custom url> -u <long url>\`` },
+					{ name: '-s / -S', value: 'yes | no', inline: true },
+					{ name: '-q / -Q', value: 'yes | no', inline: true },
+					{ name: '-u / -U', value: 'Your long url', inline: true },
+					{ name: '-c / -C', value: 'Only alphanumeric characters & underscores are allowed', inline: true },
+				)
+
+			message.channel.send(errorEmbed)
+				.catch(err => console.log(err.stack));
+			return;
 		}
 
 		// console.log(arguments);
@@ -46,14 +74,14 @@ function shortenURL(message, args) {
 		isgd.shorten(data, (res, err) => {
 			if (res) {
 				const { shorturl, qrurl, statsurl } = res;
-				let msg = `${config.get("emoji-tick")} ${message.author} URL shortened successfully!\n**Short URL:** ${shorturl}`;
+				let msg = `${config.get("emoji-tick")} ${message.author} URL shortened successfully!\n**Short URL:** <${shorturl}>`;
 
 				if (statsurl) {
-					msg += `\n**Statistics URL:** ${statsurl}`;
+					msg += `\n**Statistics URL:** <${statsurl}>`;
 				}
 
 				if (qrurl) {
-					msg += `\n**QR Code:** ${qrurl}`;
+					msg += `\n**QR Code:** <${qrurl}>`;
 				}
 
 				message.channel.send(msg);
@@ -78,7 +106,7 @@ function shortenURL(message, args) {
 			default:
 				isgd.shorten({ longUrl: args[0] }, (res, err) => {
 					if (res) {
-						message.channel.send(`${config.get("emoji-tick")} ${message.author} Your requested short URL is ${res.shorturl}`);
+						message.channel.send(`${config.get("emoji-tick")} ${message.author} Your requested short URL is <${res.shorturl}>`);
 					} else {
 						const { errorcode, errormessage } = err;
 						message.channel.send(`${config.get("emoji-warn")} ${message.author} Opps! something bad happened ;(\n**Error Code:** ${errorcode}\n**Error Message:** ${errormessage}`);
