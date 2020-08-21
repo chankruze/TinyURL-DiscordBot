@@ -28,6 +28,6 @@ module.exports.run = (client, message, args) => {
 		}).catch(err => console.log(err.stack));
 
 	if (message.channel.type != 'dm') {
-		message.delete(0).catch(err => console.log(err.stack));
+		message.delete({ timeout: 0, reason: 'It had to be done.' });
 	}
 }

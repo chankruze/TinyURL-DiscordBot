@@ -56,8 +56,6 @@ client.on('message', async message => {
 	const args = message.content.split(/\s+/g);
 	const command = args.shift().slice(prefix.length);
 
-	// add advance logic for commands here
-
 	try {
 		let cmdFile = require(`./commands/${command.toLowerCase()}.js`);
 		cmdFile.run(client, message, args);

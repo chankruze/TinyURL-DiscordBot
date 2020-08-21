@@ -1,6 +1,6 @@
 {
   "name": "TinyURL",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Shortens long nasty valid URLs",
   "main": "TinyURL.js",
   "scripts": {
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/chankruze/TinyURL-DiscordBot#readme",
   "dependencies": {
+    "axios": "^0.20.0",
     "config": "^3.3.1",
     "discord.js": "^12.3.1",
     "glob": "^7.1.6"
