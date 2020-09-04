@@ -9,8 +9,9 @@ const isgd = require('../utils/shorten');
 
 const config = require('config');
 const prefix = config.get('prefix');
+const Discord = require('discord.js');
 
-function shortenURL(client, message, args) {
+function shortenURL(client, message, args, isDm) {
 	let arguments = {
 		"-s": false,
 		"-c": null,
@@ -45,7 +46,6 @@ function shortenURL(client, message, args) {
 
 		//**Note:** Commands are NOT case sensitive
 		if (!arguments["-u"]) {
-			const Discord = require('discord.js');
 			let errorEmbed = new Discord.MessageEmbed()
 				.setColor(config.get('bg-danger'))
 				// .setTitle('TinyURL-Error')
@@ -75,7 +75,6 @@ function shortenURL(client, message, args) {
 		isgd.shorten(data, (res, err) => {
 			if (res) {
 				const { shorturl, statsurl, qrurl } = res;
-				const Discord = require('discord.js');
 
 				let shortEmbed = new Discord.MessageEmbed()
 					.setColor(config.get('bg-success'));
@@ -120,13 +119,30 @@ function shortenURL(client, message, args) {
 	} else {
 		switch (args[0]) {
 			case 'help':
-				// show usage in dm
-				message.author
-					.send(`TinyURL Usage: *\`${prefix}trim <long url>\`* | \`<required>\``)
-					.catch(err => console.log(err.stack));
+				let trimHelpEmbed = new Discord.MessageEmbed()
+					.setColor(config.get('bg-danger'))
+					.setTitle(`${config.get("emoji-info")} Usage of \`${prefix}trim\``)
+					.setDescription(`**Simple Usage**\n\`${prefix}trim <long url>\``)
+					.addField(`**Advance Usage**\n\`${prefix}trim -s <yes/no> -q <yes/no> -c <custom url> -u <long url>\``)
+					.addFields(
+						{ name: '-s / -S', value: 'yes | no', inline: true },
+						{ name: '-q / -Q', value: 'yes | no', inline: true },
+						{ name: '-u / -U', value: 'Your long url', inline: true },
+						{ name: '-c / -C', value: 'Only alphanumeric characters & underscores are allowed', inline: true },
+					)
+					.addField(`${config.get("emoji-pin")} Detailed Info`, `[${config.get("emoji-link")} ${config.get("url-home")}](${config.get("url-web-info")})`)
 
-				// show usage in channel 
-				message.channel.send(`TinyURL Usage: *\`${prefix}trim <long url>\`* | \`<required>\``)
+				// channel
+				if (!isDm) {
+					message.author.send(trimHelpEmbed)
+						.catch(err => console.log(err.stack));
+
+					message.channel.send(trimHelpEmbed)
+						.catch(err => console.log(err.stack));
+				}
+
+				// dm
+				message.author.send(trimHelpEmbed)
 					.catch(err => console.log(err.stack));
 				break;
 
@@ -147,7 +163,7 @@ function shortenURL(client, message, args) {
 module.exports.run = (client, message, args) => {
 	if (args.length > 0) {
 		if (message.channel.type === 'dm') {
-			shortenURL(client, message, args);
+			shortenURL(client, message, args, true);
 			message.delete({ timeout: 0, reason: 'It had to be done.' }).catch(err => console.log(err.stack));
 			return;
 		} else {
@@ -159,7 +175,7 @@ module.exports.run = (client, message, args) => {
 				return;
 			}
 
-			shortenURL(client, message, args);
+			shortenURL(client, message, args, false);
 			message.delete({ timeout: 0, reason: 'It had to be done.' });
 		}
 	} else {

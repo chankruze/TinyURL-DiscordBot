@@ -23,7 +23,7 @@
     "emoji-info": "ℹ️",
     "ascii-arrow-right": "→",
     "url-logo": "https://res.cloudinary.com/chankruze/image/upload/v1597959809/Discord/ic_launcher.png",
-    "url-home": "https://geekofia.in/TinyURL-DiscordBot",
+    "url-home": "https://tinyurl.geekofia.in",
     "url-invite": "https://discord.com/api/oauth2/authorize?client_id=744989604997759016&permissions=26624&scope=bot",
     "url-invite-short": "https://is.gd/mh988n",
     "url-support": "http://discord.gg/uNKRMua",
@@ -31,6 +31,7 @@
     "url-gpay-qr": "https://res.cloudinary.com/chankruze/image/upload/v1597921018/Discord/IMG_20200820_162354.jpg",
     "url-avatar-git-geekofia": "https://avatars1.githubusercontent.com/u/41100705",
     "url-avatar-git-chankruze": "https://avatars1.githubusercontent.com/u/29806845",
+    "url-web-info": "https://tinyurl.geekofia.in/discord-bot",
     "required-permissions": [
         "SEND_MESSAGES",
         "MANAGE_MESSAGES",
